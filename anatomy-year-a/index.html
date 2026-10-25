@@ -1,0 +1,201 @@
+<!doctype html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>מצגות אנטומיה ופיזיולוגיה</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Rubik:wght@500;700&family=Assistant:wght@400;600;700&display=swap">
+<style>
+/* Layout: header with search, then a grid of body-system cards; each card lists its presentations with view and download actions */
+:root{
+  --bg:#f3f8f8; --surface:#ffffff; --fg:#17323a; --muted:#5d7780; --line:#d9e6e8;
+  --accent:#00a6c8; --accent-ink:#ffffff; --accent-soft:#e0f5fa; --green:#3f9a6b; --green-soft:#e6f4ec;
+  --display:"Rubik","Assistant",system-ui,sans-serif; --body:"Assistant","Rubik",system-ui,sans-serif;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --bg:#0f1c20; --surface:#16272c; --fg:#e4f0f2; --muted:#93acb3; --line:#25393f;
+  --accent:#2cc3e3; --accent-ink:#06232b; --accent-soft:#143840; --green:#62c08f; --green-soft:#183429; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#0f1c20; --surface:#16272c; --fg:#e4f0f2; --muted:#93acb3; --line:#25393f;
+  --accent:#2cc3e3; --accent-ink:#06232b; --accent-soft:#143840; --green:#62c08f; --green-soft:#183429; color-scheme:dark}
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--fg);font-family:var(--body);font-size:16px;line-height:1.5;direction:rtl;
+  padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:24px 40px;margin:0}
+.wrap{max-width:1100px;margin:0 auto;display:flex;flex-direction:column;gap:20px}
+header{display:flex;flex-wrap:wrap;align-items:flex-end;justify-content:space-between;gap:12px 24px}
+h1{font-family:var(--display);font-weight:700;font-size:clamp(1.5rem,3vw,2rem);margin:0;text-wrap:balance}
+.sub{color:var(--muted);margin:2px 0 0}
+.search{position:relative;flex:0 1 320px;min-width:0}
+.search input{width:100%;font:inherit;padding:10px 40px 10px 14px;border:1px solid var(--line);border-radius:999px;background:var(--surface);color:var(--fg)}
+.search input:focus{outline:2px solid var(--accent);outline-offset:1px}
+.search svg{position:absolute;right:14px;top:50%;transform:translateY(-50%);color:var(--muted)}
+.chips{display:flex;flex-wrap:wrap;gap:8px}
+.chip{font:inherit;font-size:.92rem;border:1px solid var(--line);background:var(--surface);color:var(--fg);padding:5px 12px;border-radius:999px;cursor:pointer;display:inline-flex;align-items:center;gap:6px}
+.chip:hover{border-color:var(--accent)}
+.chip:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.chip svg{width:16px;height:16px;color:var(--accent)}
+.grid{columns:3 320px;column-gap:16px}
+.card{break-inside:avoid;margin-bottom:16px;background:var(--surface);border:1px solid var(--line);border-radius:14px;overflow:hidden;scroll-margin-top:16px}
+.card-head{display:flex;align-items:center;gap:12px;padding:14px 16px;border-bottom:1px solid var(--line)}
+.icon{flex:none;width:44px;height:44px;border-radius:12px;background:var(--accent-soft);color:var(--accent);display:grid;place-items:center}
+.icon svg{width:26px;height:26px}
+.card-head h2{font-family:var(--display);font-weight:500;font-size:1.12rem;margin:0;line-height:1.25}
+.count{color:var(--muted);font-size:.88rem}
+.folder{margin-inline-start:auto;font-size:.85rem;color:var(--muted);text-decoration:none;white-space:nowrap}
+.folder:hover{color:var(--accent);text-decoration:underline}
+ul{list-style:none;margin:0;padding:6px 0}
+.group{font-size:.82rem;font-weight:700;letter-spacing:.02em;color:var(--green);background:var(--green-soft);padding:4px 16px;margin-top:6px}
+li.file{display:grid;grid-template-columns:auto 1fr auto;align-items:center;gap:10px;padding:8px 16px}
+li.file+li.file{border-top:1px dashed var(--line)}
+.num{min-width:26px;height:26px;border-radius:8px;background:var(--bg);color:var(--muted);font-size:.85rem;font-weight:700;display:grid;place-items:center;font-variant-numeric:tabular-nums}
+.name{min-width:0}
+.name a{color:var(--fg);text-decoration:none;font-weight:600}
+.name a:hover{color:var(--accent);text-decoration:underline}
+.size{display:block;color:var(--muted);font-size:.8rem;font-variant-numeric:tabular-nums}
+.dl{display:inline-flex;align-items:center;gap:6px;background:var(--accent);color:var(--accent-ink);text-decoration:none;font-weight:700;font-size:.88rem;padding:6px 12px;border-radius:999px;white-space:nowrap}
+.dl:hover{filter:brightness(1.07)}
+.dl:focus-visible,.name a:focus-visible,.folder:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.dl svg{width:16px;height:16px}
+.empty{color:var(--muted);text-align:center;padding:24px}
+.note{color:var(--muted);font-size:.88rem}
+@media (max-width:480px){.dl span{display:none}.dl{padding:7px}}
+</style>
+</head>
+<body>
+
+<div class="wrap">
+  <header>
+    <div>
+      <h1>מצגות הקורס: אנטומיה ופיזיולוגיה</h1>
+      <p class="sub">רפואה מערבית א, תשפ"ז. לחיצה על שם המצגת פותחת אותה לצפייה, וכפתור "הורדה" שומר אותה למחשב.</p>
+    </div>
+    <label class="search" for="q">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
+      <input id="q" type="search" placeholder="חיפוש מצגת, למשל: לב, כליות, עור" aria-label="חיפוש מצגת">
+    </label>
+  </header>
+  <nav class="chips" id="chips" aria-label="קפיצה לנושא"></nav>
+  <main class="grid" id="grid"></main>
+  <p class="empty" id="empty" hidden>לא נמצאו מצגות שמתאימות לחיפוש.</p>
+  <p class="note">קבצים גדולים (מעל 10MB) עשויים להציג הודעה של Google שהקובץ לא נסרק לווירוסים. זה תקין, יש ללחוץ "הורדה בכל זאת".</p>
+</div>
+
+<script>
+const I={
+ body:'<circle cx="12" cy="4.5" r="2.2"/><path d="M12 7.5v7M7 10l5-1.5 5 1.5M9 21l3-6.5 3 6.5"/>',
+ skin:'<path d="M3 7c3-2 6 2 9 0s6-2 9 0M3 12c3-2 6 2 9 0s6-2 9 0M3 17c3-2 6 2 9 0s6-2 9 0"/>',
+ bone:'<path d="M8.5 6.5a2.5 2.5 0 1 0-3.5 3.3l9.2 9.2a2.5 2.5 0 1 0 3.3-3.5 2.5 2.5 0 1 0-3.5-3.3L4.8 3a2.5 2.5 0 1 0 3.7 3.5Z" transform="translate(0 0)"/>',
+ nerve:'<circle cx="12" cy="12" r="3"/><path d="M12 9V3M9.4 13.5 4 17M14.6 13.5 20 17M12 3l-2-1.5M12 3l2-1.5M4 17l-1.5-.5M4 17l.2 1.8M20 17l1.5-.5M20 17l-.2 1.8"/>',
+ eye:'<path d="M2 12s3.6-6.5 10-6.5S22 12 22 12s-3.6 6.5-10 6.5S2 12 2 12Z"/><circle cx="12" cy="12" r="3"/>',
+ ear:'<path d="M7 9a5 5 0 0 1 10 0c0 3-2.5 4-3.5 6S12 20 9.5 20 6.5 18 6.5 17"/><path d="M10 9.5a2 2 0 0 1 4 0c0 1.5-1.5 2-1.5 3"/>',
+ drop:'<path d="M12 3s6 6.5 6 11a6 6 0 0 1-12 0c0-4.5 6-11 6-11Z"/><path d="M9.5 14.5a2.5 2.5 0 0 0 2.5 2.5"/>',
+ heart:'<path d="M12 20s-7.5-4.6-7.5-10A4.3 4.3 0 0 1 12 7.3 4.3 4.3 0 0 1 19.5 10c0 5.4-7.5 10-7.5 10Z"/><path d="M4.5 12h4l1.5-2.5 2 5 1.5-2.5h6"/>',
+ shield:'<path d="M12 3 5 6v5.5c0 4.3 3 7.8 7 9.5 4-1.7 7-5.2 7-9.5V6l-7-3Z"/><path d="m9 12 2 2 4-4"/>',
+ lungs:'<path d="M12 4v8M12 12c-1.5-1-3-1.5-3-1.5M12 12c1.5-1 3-1.5 3-1.5"/><path d="M8.5 7C6 7 4 12 4 16.5 4 19 5.5 20 7 20s2.5-1 2.5-3V9.5C9.5 8 9.2 7 8.5 7ZM15.5 7C18 7 20 12 20 16.5c0 2.5-1.5 3.5-3 3.5s-2.5-1-2.5-3V9.5c0-1.5.3-2.5 1-2.5Z"/>',
+ gut:'<path d="M9 3v3c0 1.5 1 2 2.5 2H15a4 4 0 0 1 4 4c0 3-2 5-5 5h-2a3 3 0 0 0-3 3v1"/><path d="M9 8c-2 1-3 3-3 5"/>',
+ kidney:'<path d="M9 4C5.5 4 4 7.5 4 11.5S5.5 20 9 20c2.5 0 3-2 3-3.5 0-1.2-1.2-2-1.2-4.5S12 8.7 12 7.5C12 5.5 11 4 9 4Z"/><path d="M12 12h4.5c1.5 0 2.5 1 2.5 2.5V21"/>',
+ repro:'<circle cx="9" cy="12" r="5"/><circle cx="16.5" cy="12" r="2.5"/><path d="M19 12h3"/>',
+ dna:'<path d="M7 3c0 6 10 6 10 12 0 3-1.5 4.5-3 6M17 3c0 6-10 6-10 12 0 3 1.5 4.5 3 6M8.5 7h7M8.5 17h7M10 11.5h4"/>'
+};
+const F='https://drive.google.com/drive/folders/';
+const T=[
+ {t:'מבוא לאנטומיה פיזיולוגיה',i:'body',f:'1K0TflCRkRalLWsgAQChr3yibTp_F_fSb',g:[{files:[
+  ['1 מבוא לאנטומיה פיזיולוגיה','18djJ1fnRSoOR5y86DYNFGi3sI9SQEl1z',1304282],
+  ['2 רקמות הגוף מבנה ותפקיד','1zPKQ2D_EkLfrD6ZhNxQBmne5NmsrDknS',990169],
+  ['3 מבוא לאנטומיה פיזיולוגיה מערכות הגוף האנושי','1pPEWqe9iffCa7Be9lbyrncZQbuDfe1AH',690075],
+  ['4 הרכב הגוף','1WEIiiTdsVcMj3aJire-sAa75zI57g7hS',1199078],
+  ['5 מישורים וכיוונים','15OcM-6JrUR53ZUFa-NvL3o6tcv1IWkgJ',1326292],
+  ['6 מבוא לפיזיולוגיה של גוף האדם','1cfBbsImOulzASgSMVi1fCIUTs3l8Uxpe',869115]]}]},
+ {t:'מעטה גוף האדם',i:'skin',f:'1j2WqNtxwJ6cgez_VAXKocP9s-u7pkyMi',g:[{files:[
+  ['1 העור: אפידרמיס, שכבות התאים','1RxxcHfCDXl0khzWHe1CeuLGfXSlOQ5ra',1038761],
+  ['2 העור: אפידרמיס, סוגי תאים','18eXF13VUGFIp8KnZT9zT00OCzBoxjCyP',641835],
+  ['3 העור: הדרמיס ותפולות העור','1hOhYLYI123eijb_QBSEmoc6vT6EgXGNE',710358],
+  ['4 העור: תפקידי העור','1s741uaX-6_bgqQg1yu4wYYFiU2JDMIk0',617052]]}]},
+ {t:'מערכת שלד שריר',i:'bone',f:'1e7IKWG0MCQQzlX1r1pa79CdOwQzSBLFx',g:[
+  {name:'מבוא למערכת שלד שריר',files:[
+  ['1 מערכת התנועה: רקמת עצם','1GlUeiyxl7B7ulM__xkEMakooXhwSKRqW',2309148],
+  ['2 מערכת התנועה: מפרקים','13ToMbNWfM_XUJbFZzSr4hriROQbpNL5a',1299926],
+  ['3 מערכת התנועה: שרירים','1k9ZknTYo26nMeP9E_uHtcQ2aUmVIi6bN',1979730],
+  ['4 מערכת התנועה: גידים וחברים נוספים','1bEOQtk3q16VzNWmjCIgj_6GJ5P1D0pYG',812428],
+  ['גב ועמוד שדרה','1Pa2D4PukxWcyLKyyGGf9S618CpMCmNWN',5426856]]},
+  {name:'לא חובה: עצמות השלד והמפרקים',files:[
+  ['עצמות השלד והמפרקים העיקריים','1SCfGv6SRwi7tKQjYXKJJlMeolIw2Ayez',4948204]]},
+  {name:'לא חובה: שרירי השלד',files:[
+  ['1 שרירי השלד: שכמה, כתף','1xfyeTjiI_G6qbFQSEEtzZqjCcXN0qSYW',2798166],
+  ['2 שרירי השלד: גפה עליונה','12M_3mDDolaa1ngvBcfXcTP55uJCY1V-X',3173465],
+  ['3 שרירי השלד: בית חזה ובטן','1zrAi4GFvHI6_rsfC_W9Kmi2BmqIz0odO',3362331],
+  ['4 שרירי השלד: גפה תחתונה','1GK-AcWdbTT3rAu_xFSwKcX7vc9JApPQ4',7691091],
+  ['5 שרירי ליבה גב ובטן, מבוא','1IJZSoXu7azcD1SICt_-W3l3-9PQjgEFC',1819416],
+  ['6 שרירי ליבה: בטן, גב, צוואר (מורחב)','1eUsmg-9A6tP268xDCR7EV8YONKTpcl7i',3586116]]}]},
+ {t:'מערכת העצבים',i:'nerve',f:'1rU9zmBix7iCdzNbCAvH4KGGo78KW1wxW',g:[{files:[
+  ['1-2 מבוא למערכת העצבים ומבנה הנוירון','1kR11PxPJSoU0fL4A0KUIzcjXpStdPwUD',1309319],
+  ['3-7 מוח ועצבים קרניאליים','1N4lTWkCD8G79M3uSWNx1hyCPDrsEtuRW',3967698],
+  ['8-11 חוט השדרה ועצבים ספינליים, אוטונומית וחושים מיוחדים','1uL9GHz-665Q58CJPTvjyCcFJ0B74nCOY',4060995]]}]},
+ {t:'מערכת הראייה',i:'eye',f:'1BnGA4KqtN3-ofMiaigvTGaZUY_Uh92r0',g:[{files:[
+  ['מערכת הראייה (Visual system)','1pgOWiGhlhd_y6_N3tM5ZzlUX5vVo-B-3',4299429]]}]},
+ {t:'מערכת שמיעה ושיווי משקל',i:'ear',f:'1-JGis3Mh9x8lTwUwjkc69lVbGDlpyo1T',g:[{files:[
+  ['מערכת שמיעה ושיווי משקל','1EjonOb2HBCyp63_VDz7hW-PmGzF-Ap45',5662609]]}]},
+ {t:'המערכת ההורמונלית',i:'drop',f:'1sv_7khbA7aRROUcVr_73u7D0tpf1siUC',g:[{files:[
+  ['1 אנטומיה פיזיולוגיה של המערכת ההורמונלית','1MnAlY4Hm9Eu04laAzR1WC83X2_V1as-y',5628439],
+  ['2 סטרס בחיינו וחיינו בסטרס','1deNRtxdtrTcFvsMKr3H5UTiPY777Dclc',3634344]]}]},
+ {t:'מערכת ההובלה',i:'heart',f:'1541MvAK4cA4grviqH0hKZyF706I5Dago',g:[{files:[
+  ['1 מערכת ההובלה: לב וכלי דם, תפקידים','13UfFAGR6cP0xAv0uQQ0CCoMAdCX0mW7H',621842],
+  ['2 מחזור הדם','1aM3v3CfbMu4gmpWOxYImpVeHfdpYfuPQ',521680],
+  ['3 אנטומיה פיזיולוגיה של הלב','1qpMIg_ofZLzbnqL4l9qPA7UUvTczb-HC',2455610],
+  ['4 לב וכלי דם: אנטומיה פיזיולוגיה','1iaSF-1bPQk5JTI1sox3dzCyfbwWzEY8m',1991177],
+  ['4 לב וכלי דם: פיזיולוגיה של המאמץ','1OFd5vhZidvLNVvGAhydleSXTUrDYU126',3692086],
+  ['5 פיזיולוגיה של המאמץ','1xOyuhgPfaTvXutS0DlNK61Dy_5f3U15m',335076],
+  ['6 נוזל הדם','1_W53DeCkk4wipoUuXIC8HyiwEfj8TIcI',694031]]}]},
+ {t:'מערכת החיסון',i:'shield',f:'1DPQiATIxZrDkxGNrHyaY0jv-VHlpsmi-',g:[{files:[
+  ['1 אנטומיה פיזיולוגיה של מערכת הלימפה','1A0jF1ebVidc8Glqy7TP2ZfPH0s5b4Zi8',4239309],
+  ['2 היכרות עם מערכת הלימפה','1JSmKxx-Tlq3OLYBJQI_xaZ1phQI0FXw_',148850],
+  ['3 מערכת החיסון המולדת והנרכשת','1wgjmETxQEKTArbp2YQESFp8TOf88WEOQ',7441566],
+  ['4 מערכת החיסון: חיסונים','1VdNqOxl8Mc4eulCLEDNqzSOOTMKpzttE',1868202]]}]},
+ {t:'מערכת הנשימה',i:'lungs',f:'1VHXx9XiH12DxFyvb45ctEvGVd-_SXjr0',g:[{files:[
+  ['1 אנטומיה פיזיולוגיה של מערכת הנשימה','1OqlM4dIdmBZcKCgilsG0fPx5Ypx-R6CG',8034873]]}]},
+ {t:'מערכת העיכול',i:'gut',f:'1-Lde8eTXzUFUmSE8kI9hCOso-el_XZWk',g:[{files:[
+  ['1 אנטומיה פיזיולוגיה של צינור מערכת העיכול','1R5x04SWkh8wErmyplj-zQUmkoH4ynIxn',5281027],
+  ['2 אנטומיה פיזיולוגיה: כבד, לבלב וכיס מרה','1MlzYmdH-7c7_sfOFzgcUBfM7l2A5VqT2',4136051]]}]},
+ {t:'מערכת השתן',i:'kidney',f:'1C7pL-cSf-EiAv-mKFiV14YuAJK-Kk7P1',g:[{files:[
+  ['1 אנטומיה של מערכת השתן והכליות','1BhH05Qaln_Lq1ZR0Zf8F6c2uzetLF5Kd',4675467],
+  ['2 פיזיולוגיה של מערכת השתן והכליות','1qg8DnXYAYDeVi-mvR8IgUH3LIRralr8Q',2853626]]}]},
+ {t:'מערכת הרבייה הנשית והגברית',i:'repro',f:'1oEcXByTfXB5bxfMO3uTNSUa4DqTVqcL9',g:[{files:[
+  ['1 אנטומיה של מערכת הרבייה הנשית, מבוא','1JA3CS3DNSM57BkhP0E_IXCaJih5_HDtU',4464978],
+  ['2 פיזיולוגיה של מערכת הרבייה הנשית','1ZyQiFOcdZKCO8A3XNGQme3nzL9XG4DII',1898722],
+  ['3 תהליך ההריון','1ioY0pNVjUguTbKeZrWHVdQpQdTctZmiQ',4652140],
+  ['רשימת הבדיקות המומלצות בהריון','1xnU7dsoxzz6QLlEeSuIR0IXwcIZtUk2N',180770],
+  ['אנטומיה פיזיולוגיה של מערכת המין הגברית','1qWauW0xdjrqBEeETR6yroNa1IzRADKOm',6615783]]}]},
+ {t:'גנטיקה ותורשה',i:'dna',f:'1yqVZM0c0_-ORA9De-oO269G2Od5nmIRy',g:[{files:[
+  ['גנטיקה ותורשה','1G0J63P0yrden_RYS1JwmAuu_-ex6Q-R_',21194482]]}]}
+];
+const svg=(k,w)=>`<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="${w||1.7}" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${I[k]}</svg>`;
+const DL='<path d="M12 4v11m0 0-4.5-4.5M12 15l4.5-4.5M5 19.5h14"/>';
+const mb=b=>(b/1048576).toFixed(1)+' MB';
+const esc=s=>s.replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+function split(n){const m=n.match(/^(\d+(?:-\d+)?)\s+(.*)$/);return m?[m[1],m[2]]:['',n]}
+function render(q){
+  q=(q||'').trim();let shown=0,html='';
+  T.forEach((tp,ti)=>{
+    const topicHit=q&&tp.t.includes(q);let rows='',n=0;
+    tp.g.forEach(gr=>{
+      const fs=gr.files.filter(f=>!q||topicHit||f[0].includes(q)||(gr.name||'').includes(q));
+      if(!fs.length)return;
+      if(gr.name)rows+=`<li class="group">${esc(gr.name)}</li>`;
+      fs.forEach(([name,id,size])=>{n++;const [num,label]=split(name);
+        rows+=`<li class="file"><span class="num">${num||'&#8226;'}</span><span class="name"><a href="https://drive.google.com/file/d/${id}/view" target="_blank" rel="noopener">${esc(label)}</a><span class="size">PDF · ${mb(size)}</span></span><a class="dl" href="https://drive.google.com/uc?export=download&amp;id=${id}" target="_blank" rel="noopener" aria-label="הורדת ${esc(label)}"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${DL}</svg><span>הורדה</span></a></li>`;});
+    });
+    if(!n)return;shown++;
+    html+=`<section class="card" id="t${ti}"><div class="card-head"><span class="icon">${svg(tp.i)}</span><div><h2>${esc(tp.t)}</h2><span class="count">${n} מצגות</span></div><a class="folder" href="${F}${tp.f}" target="_blank" rel="noopener">כל התיקייה</a></div><ul>${rows}</ul></section>`;
+  });
+  document.getElementById('grid').innerHTML=html;
+  document.getElementById('empty').hidden=shown>0;
+}
+document.getElementById('chips').innerHTML=T.map((tp,ti)=>`<button class="chip" type="button" data-t="t${ti}">${svg(tp.i,2)}${esc(tp.t)}</button>`).join('');
+document.getElementById('chips').addEventListener('click',e=>{const b=e.target.closest('.chip');if(!b)return;
+  const q=document.getElementById('q');if(q.value){q.value='';render('')}
+  const el=document.getElementById(b.dataset.t);if(el)el.scrollIntoView({behavior:matchMedia('(prefers-reduced-motion: reduce)').matches?'auto':'smooth'})});
+document.getElementById('q').addEventListener('input',e=>render(e.target.value));
+render('');
+</script>
+</body>
+</html>
