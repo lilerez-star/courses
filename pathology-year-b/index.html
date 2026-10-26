@@ -1,0 +1,168 @@
+<!doctype html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<!doctype html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>מצגות פתולוגיה</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Rubik:wght@500;700&family=Assistant:wght@400;600;700&display=swap">
+<style>
+/* Layout: header with search, then a grid of body-system cards; each card lists its presentations with view and download actions */
+:root{
+  --bg:#f3f8f8; --surface:#ffffff; --fg:#17323a; --muted:#5d7780; --line:#d9e6e8;
+  --accent:#00a6c8; --accent-ink:#ffffff; --accent-soft:#e0f5fa; --green:#3f9a6b; --green-soft:#e6f4ec;
+  --display:"Rubik","Assistant",system-ui,sans-serif; --body:"Assistant","Rubik",system-ui,sans-serif;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --bg:#0f1c20; --surface:#16272c; --fg:#e4f0f2; --muted:#93acb3; --line:#25393f;
+  --accent:#2cc3e3; --accent-ink:#06232b; --accent-soft:#143840; --green:#62c08f; --green-soft:#183429; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#0f1c20; --surface:#16272c; --fg:#e4f0f2; --muted:#93acb3; --line:#25393f;
+  --accent:#2cc3e3; --accent-ink:#06232b; --accent-soft:#143840; --green:#62c08f; --green-soft:#183429; color-scheme:dark}
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--fg);font-family:var(--body);font-size:16px;line-height:1.5;direction:rtl;
+  padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:24px 40px;margin:0}
+.wrap{max-width:1100px;margin:0 auto;display:flex;flex-direction:column;gap:20px}
+header{display:flex;flex-wrap:wrap;align-items:flex-end;justify-content:space-between;gap:12px 24px}
+h1{font-family:var(--display);font-weight:700;font-size:clamp(1.5rem,3vw,2rem);margin:0;text-wrap:balance}
+.sub{color:var(--muted);margin:2px 0 0}
+.search{position:relative;flex:0 1 320px;min-width:0}
+.search input{width:100%;font:inherit;padding:10px 40px 10px 14px;border:1px solid var(--line);border-radius:999px;background:var(--surface);color:var(--fg)}
+.search input:focus{outline:2px solid var(--accent);outline-offset:1px}
+.search svg{position:absolute;right:14px;top:50%;transform:translateY(-50%);color:var(--muted)}
+.chips{display:flex;flex-wrap:wrap;gap:8px}
+.chip{font:inherit;font-size:.92rem;border:1px solid var(--line);background:var(--surface);color:var(--fg);padding:5px 12px;border-radius:999px;cursor:pointer;display:inline-flex;align-items:center;gap:6px}
+.chip:hover{border-color:var(--accent)}
+.chip:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.chip svg{width:16px;height:16px;color:var(--accent)}
+.grid{columns:3 320px;column-gap:16px}
+.card{break-inside:avoid;margin-bottom:16px;background:var(--surface);border:1px solid var(--line);border-radius:14px;overflow:hidden;scroll-margin-top:16px}
+.card-head{display:flex;align-items:center;gap:12px;padding:14px 16px;border-bottom:1px solid var(--line)}
+.icon{flex:none;width:44px;height:44px;border-radius:12px;background:var(--accent-soft);color:var(--accent);display:grid;place-items:center}
+.icon svg{width:26px;height:26px}
+.card-head h2 a{color:inherit;text-decoration:none}.card-head h2 a:hover{color:var(--accent);text-decoration:underline}.card-head .name{min-width:0}.card-head h2{font-family:var(--display);font-weight:500;font-size:1.12rem;margin:0;line-height:1.25}
+.count{color:var(--muted);font-size:.88rem}
+.folder{margin-inline-start:auto;font-size:.85rem;color:var(--muted);text-decoration:none;white-space:nowrap}
+.folder:hover{color:var(--accent);text-decoration:underline}
+ul{list-style:none;margin:0;padding:6px 0}
+.group{font-size:.82rem;font-weight:700;letter-spacing:.02em;color:var(--green);background:var(--green-soft);padding:4px 16px;margin-top:6px}
+li.file{display:grid;grid-template-columns:auto 1fr auto;align-items:center;gap:10px;padding:8px 16px}
+li.file+li.file{border-top:1px dashed var(--line)}
+.num{min-width:26px;height:26px;border-radius:8px;background:var(--bg);color:var(--muted);font-size:.85rem;font-weight:700;display:grid;place-items:center;font-variant-numeric:tabular-nums}
+.name{min-width:0}
+.name a{color:var(--fg);text-decoration:none;font-weight:600}
+.name a:hover{color:var(--accent);text-decoration:underline}
+.size{display:block;color:var(--muted);font-size:.8rem;font-variant-numeric:tabular-nums}
+.dl{display:inline-flex;align-items:center;gap:6px;background:var(--accent);color:var(--accent-ink);text-decoration:none;font-weight:700;font-size:.88rem;padding:6px 12px;border-radius:999px;white-space:nowrap}
+.dl:hover{filter:brightness(1.07)}
+.dl:focus-visible,.name a:focus-visible,.folder:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.dl svg{width:16px;height:16px}
+.empty{color:var(--muted);text-align:center;padding:24px}
+.note{color:var(--muted);font-size:.88rem}
+@media (max-width:480px){.dl span{display:none}.dl{padding:7px}}
+</style>
+</head>
+<body>
+</head>
+<body>
+
+<div class="wrap">
+  <header>
+    <div>
+      <h1>מצגות הקורס: פתולוגיה</h1>
+      <p class="sub">רפואה מערבית ב, תשפ"ז. לחיצה על שם המצגת פותחת אותה לצפייה, וכפתור "הורדה" שומר אותה למחשב.</p>
+    </div>
+    <label class="search" for="q">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
+      <input id="q" type="search" placeholder="חיפוש מצגת, למשל: אנמיה, סוכרת, עור" aria-label="חיפוש מצגת">
+    </label>
+  </header>
+  <nav class="chips" id="chips" aria-label="קפיצה לנושא"></nav>
+  <main class="grid" id="grid"></main>
+  <p class="empty" id="empty" hidden>לא נמצאו מצגות שמתאימות לחיפוש.</p>
+  <p class="note">אפשר גם לפתוח את <a href="https://drive.google.com/drive/folders/1Xpp17qVKmHRajh0OwH3xKUxzqBppoKQu" target="_blank" rel="noopener">תיקיית המצגות המלאה בדרייב</a>. קבצים גדולים (מעל 10MB) עשויים להציג הודעה של Google שהקובץ לא נסרק לווירוסים. זה תקין, יש ללחוץ "הורדה בכל זאת".</p>
+</div>
+
+<script>
+const I={
+ micro:'<path d="M9 3h4l-1 6h-2L9 3ZM10 9v3a4 4 0 0 0 4 4"/><path d="M14 16a5 5 0 0 0 0-8"/><path d="M5 21h14M8 21v-2h8v2"/>',
+ virus:'<circle cx="12" cy="12" r="5"/><path d="M12 7V3M12 21v-4M7 12H3M21 12h-4M8.5 8.5 6 6M18 18l-2.5-2.5M8.5 15.5 6 18M18 6l-2.5 2.5"/><circle cx="10.5" cy="11" r=".6"/><circle cx="13.5" cy="13" r=".6"/>',
+ joint:'<path d="M7 3v6a3 3 0 0 0 3 3h0M17 21v-6a3 3 0 0 0-3-3h0"/><circle cx="12" cy="12" r="2.5"/><path d="M5 3h4M15 21h4"/>',
+ liver:'<path d="M3 9c0-3 3-4 7-4h7c3 0 4 2 4 4 0 4-5 8-11 9-4 .7-7-3-7-9Z"/><path d="M12 5v6"/>',
+ flask:'<path d="M9 3h6M10 3v6l-5 9a2 2 0 0 0 1.8 3h10.4a2 2 0 0 0 1.8-3l-5-9V3"/><path d="M7.5 14h9"/>',
+ brain:'<path d="M12 5a3 3 0 0 0-5.5-1.5A3 3 0 0 0 4 8a3 3 0 0 0 0 5 3 3 0 0 0 3 5 3 3 0 0 0 5 1V5Z"/><path d="M12 5a3 3 0 0 1 5.5-1.5A3 3 0 0 1 20 8a3 3 0 0 1 0 5 3 3 0 0 1-3 5 3 3 0 0 1-5 1"/>',
+ flower:'<circle cx="12" cy="9" r="2.2"/><path d="M12 6.8c0-2.5 3-2.5 3 0M14.2 9c2.5 0 2.5 3 0 3M12 11.2c0 2.5-3 2.5-3 0M9.8 9c-2.5 0-2.5-3 0-3M12 11.2V21M12 17c-2-2-4-1.5-5-1M12 18c2-2 4-1.5 5-1"/>',
+ ribbon:'<path d="M12 3a3.5 3.5 0 0 0-3.5 3.5c0 2.5 2 4.5 3.5 6.5 1.5-2 3.5-4 3.5-6.5A3.5 3.5 0 0 0 12 3Z"/><path d="M12 13l-5 8M12 13l5 8"/>',
+ child:'<circle cx="12" cy="6" r="3"/><path d="M6 12l6-2 6 2M12 10v5M9 21l3-6 3 6"/>',
+ body:'<circle cx="12" cy="4.5" r="2.2"/><path d="M12 7.5v7M7 10l5-1.5 5 1.5M9 21l3-6.5 3 6.5"/>',
+ skin:'<path d="M3 7c3-2 6 2 9 0s6-2 9 0M3 12c3-2 6 2 9 0s6-2 9 0M3 17c3-2 6 2 9 0s6-2 9 0"/>',
+ bone:'<path d="M8.5 6.5a2.5 2.5 0 1 0-3.5 3.3l9.2 9.2a2.5 2.5 0 1 0 3.3-3.5 2.5 2.5 0 1 0-3.5-3.3L4.8 3a2.5 2.5 0 1 0 3.7 3.5Z" transform="translate(0 0)"/>',
+ nerve:'<circle cx="12" cy="12" r="3"/><path d="M12 9V3M9.4 13.5 4 17M14.6 13.5 20 17M12 3l-2-1.5M12 3l2-1.5M4 17l-1.5-.5M4 17l.2 1.8M20 17l1.5-.5M20 17l-.2 1.8"/>',
+ eye:'<path d="M2 12s3.6-6.5 10-6.5S22 12 22 12s-3.6 6.5-10 6.5S2 12 2 12Z"/><circle cx="12" cy="12" r="3"/>',
+ ear:'<path d="M7 9a5 5 0 0 1 10 0c0 3-2.5 4-3.5 6S12 20 9.5 20 6.5 18 6.5 17"/><path d="M10 9.5a2 2 0 0 1 4 0c0 1.5-1.5 2-1.5 3"/>',
+ drop:'<path d="M12 3s6 6.5 6 11a6 6 0 0 1-12 0c0-4.5 6-11 6-11Z"/><path d="M9.5 14.5a2.5 2.5 0 0 0 2.5 2.5"/>',
+ heart:'<path d="M12 20s-7.5-4.6-7.5-10A4.3 4.3 0 0 1 12 7.3 4.3 4.3 0 0 1 19.5 10c0 5.4-7.5 10-7.5 10Z"/><path d="M4.5 12h4l1.5-2.5 2 5 1.5-2.5h6"/>',
+ shield:'<path d="M12 3 5 6v5.5c0 4.3 3 7.8 7 9.5 4-1.7 7-5.2 7-9.5V6l-7-3Z"/><path d="m9 12 2 2 4-4"/>',
+ lungs:'<path d="M12 4v8M12 12c-1.5-1-3-1.5-3-1.5M12 12c1.5-1 3-1.5 3-1.5"/><path d="M8.5 7C6 7 4 12 4 16.5 4 19 5.5 20 7 20s2.5-1 2.5-3V9.5C9.5 8 9.2 7 8.5 7ZM15.5 7C18 7 20 12 20 16.5c0 2.5-1.5 3.5-3 3.5s-2.5-1-2.5-3V9.5c0-1.5.3-2.5 1-2.5Z"/>',
+ gut:'<path d="M9 3v3c0 1.5 1 2 2.5 2H15a4 4 0 0 1 4 4c0 3-2 5-5 5h-2a3 3 0 0 0-3 3v1"/><path d="M9 8c-2 1-3 3-3 5"/>',
+ kidney:'<path d="M9 4C5.5 4 4 7.5 4 11.5S5.5 20 9 20c2.5 0 3-2 3-3.5 0-1.2-1.2-2-1.2-4.5S12 8.7 12 7.5C12 5.5 11 4 9 4Z"/><path d="M12 12h4.5c1.5 0 2.5 1 2.5 2.5V21"/>',
+ repro:'<circle cx="9" cy="12" r="5"/><circle cx="16.5" cy="12" r="2.5"/><path d="M19 12h3"/>',
+ dna:'<path d="M7 3c0 6 10 6 10 12 0 3-1.5 4.5-3 6M17 3c0 6-10 6-10 12 0 3 1.5 4.5 3 6M8.5 7h7M8.5 17h7M10 11.5h4"/>'
+};
+const F='https://drive.google.com/drive/folders/';
+const T=[
+ {t:'מבוא לפתולוגיה',i:'micro',files:[['1','מבוא לפתולוגיה','1kup4u-whSHjrSnrXgJuZDgpqi3Kq_3sc',4371606]]},
+ {t:'מחלות לב וכלי דם',i:'heart',files:[['2','מחלות לב וכלי דם','1qWDvqpxWlufmsdF19BzNrXL5uYegk8en',9153002]]},
+ {t:'מבוא למחלות מערכת החיסון',i:'shield',files:[['3','מבוא למחלות מערכת החיסון','1oT7KviQj3Cf4_g5puYdRkMJ82yBv3dwH',5780411]]},
+ {t:'מחלות זיהומיות',i:'virus',files:[['4','מחלות זיהומיות','1KfFQsLQ9qBJaIPfpJSxQu9xHVyXePgwo',6887945]]},
+ {t:'ריאומטולוגיה',i:'joint',files:[['5','ריאומטולוגיה','1dSxwwpThc8TpWXw2Xauo4ZGpZHkFioo2',7334683]]},
+ {t:'דרמטולוגיה',i:'skin',files:[['6','דרמטולוגיה','1TDRrc8e-gOfc1OLVIf9nalFj3BfleQJb',11299257]]},
+ {t:'מחלות מערכת העיכול',i:'gut',files:[['7','מחלות מערכת העיכול','18hpoqs6plATblam4AYmv5QJRUw-QQOyw',10806705]]},
+ {t:'מחלות כבד ודרכי מרה',i:'liver',files:[['8','מחלות כבד ודרכי מרה','1AOm5r1_TE78d5mHR7rBLl8h9IXrZCYU3',3843976]]},
+ {t:'המטולוגיה',i:'drop',files:[
+  ['9','חלק א: אנמיה','1Ovr6LEqzxTZKHCDsDQ05QMOg7FCA1zCD',3089037],
+  ['9','חלק ב: מחלות קרישה ותאי דם לבנים','18P7fbGIAOkaUHcsK7sq4rfHQ63wLKBxC',1089107],
+  ['9','חלק ג: פוליציטמיה, ריבוי תאי דם אדומים והמוגלובין','1nOPhLZ_vSrGa3A_NaRsPiQ8UR-VIIet-',985464]]},
+ {t:'מחלות מערכת הנשימה',i:'lungs',files:[['10','מחלות מערכת הנשימה','1UVCzpB1yzHryrCiOOnrJA-Xns0dLIUR6',9875884]]},
+ {t:'מחלות אף אוזן גרון',i:'ear',files:[['11','מחלות אף אוזן גרון','18GC3QFBRR2OTEpgESDWnNzC7MNwPl4fr',17576179]]},
+ {t:'אנדוקרינולוגיה',i:'flask',files:[['12','אנדוקרינולוגיה: מחלות המערכת ההורמונלית','1uUUChBhHCObvk2AWx0U3K1p6OOmK4649',5688970]]},
+ {t:'מחלות שתן וכליות',i:'kidney',files:[['13','מחלות שתן וכליות','1P5wlMI2sxpKD4rSHjd6PEF1LRM240Nbv',9069593]]},
+ {t:'נוירולוגיה',i:'brain',files:[['14','נוירולוגיה: מחלות מערכת העצבים','1EMj_sgZttK_bq4Oi6ToxzMjO11fb_-DQ',23234353]]},
+ {t:'אורטופדיה',i:'bone',files:[['15','אורטופדיה','1q10-D6_-nAoSNGRe3ApS5hAsHiPswCtW',2616652]]},
+ {t:'גניקולוגיה',i:'flower',files:[['16','גניקולוגיה','1VBW6e_PUNMdnI_SEvQzrc9wgIUtnRR0a',9574031]]},
+ {t:'מבוא למחלת הסרטן',i:'ribbon',files:[['17','מבוא למחלת הסרטן','1rjKmpLuNLhU5m7zWL8WD8q_N5WczbOGG',1278181]]},
+ {t:'הגישה למחלות ילדים',i:'child',files:[['18','הגישה למחלות ילדים','1bok7YuVCaEILiV39jMus39MtCvg14goL',1103821]]},
+ {t:'מחלות עיניים נפוצות',i:'eye',files:[['19','מחלות עיניים נפוצות','1l-8-2pMVrRW-twHuAtU1TlpVYAUtGjFN',578598]]}
+];
+const svg=(k,w)=>`<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="${w||1.7}" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${I[k]}</svg>`;
+const DL='<path d="M12 4v11m0 0-4.5-4.5M12 15l4.5-4.5M5 19.5h14"/>';
+const mb=b=>(b/1048576).toFixed(1)+' MB';
+const esc=s=>s.replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+function render(q){
+  q=(q||'').trim();let shown=0,html='';
+  T.forEach((tp,ti)=>{
+    const hit=!q||tp.t.includes(q);const fs=tp.files.filter(f=>hit||f[1].includes(q));
+    if(!fs.length)return;shown++;
+    const rows=fs.map(([num,label,id,size])=>`<li class="file"><span class="num">${num}</span><span class="name"><a href="https://drive.google.com/file/d/${id}/view" target="_blank" rel="noopener">${esc(label)}</a><span class="size">PDF · ${mb(size)}</span></span><a class="dl" href="https://drive.google.com/uc?export=download&amp;id=${id}" target="_blank" rel="noopener" aria-label="הורדת ${esc(label)}"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${DL}</svg><span>הורדה</span></a></li>`).join('');
+    if(tp.files.length===1&&fs.length===1){const [num,label,id,size]=fs[0];
+      html+=`<section class="card" id="t${ti}"><div class="card-head"><span class="icon">${svg(tp.i)}</span><div class="name"><h2><a href="https://drive.google.com/file/d/${id}/view" target="_blank" rel="noopener">${esc(tp.t)}</a></h2><span class="count">שיעור ${num} · PDF · ${mb(size)}</span></div><a class="dl" style="margin-inline-start:auto" href="https://drive.google.com/uc?export=download&amp;id=${id}" target="_blank" rel="noopener" aria-label="הורדת ${esc(label)}"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${DL}</svg><span>הורדה</span></a></div></section>`;return;}
+    html+=`<section class="card" id="t${ti}"><div class="card-head"><span class="icon">${svg(tp.i)}</span><div><h2>${esc(tp.t)}</h2><span class="count">שיעור ${tp.files[0][0]} · ${tp.files.length} מצגות</span></div></div><ul>${rows}</ul></section>`;
+  });
+  document.getElementById('grid').innerHTML=html;
+  document.getElementById('empty').hidden=shown>0;
+}
+document.getElementById('chips').innerHTML=T.map((tp,ti)=>`<button class="chip" type="button" data-t="t${ti}">${svg(tp.i,2)}${esc(tp.t)}</button>`).join('');
+document.getElementById('chips').addEventListener('click',e=>{const b=e.target.closest('.chip');if(!b)return;
+  const q=document.getElementById('q');if(q.value){q.value='';render('')}
+  const el=document.getElementById(b.dataset.t);if(el)el.scrollIntoView({behavior:matchMedia('(prefers-reduced-motion: reduce)').matches?'auto':'smooth'})});
+document.getElementById('q').addEventListener('input',e=>render(e.target.value));
+render('');
+</script>
+</body>
+</html>
+</body>
+</html>
